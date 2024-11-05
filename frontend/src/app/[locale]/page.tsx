@@ -1,6 +1,6 @@
-import Canvas from "@/components/Canvas";
-import Editor from "@/components/Editor";
-import Sidebar from "@/components/Sidebar";
+import Canvas from "@/Components/Canvas";
+import Editor from "@/Components/Editor";
+import Sidebar from "@/Components/Sidebar";
 import getPageContent from "@/helpers/getPageContent";
 
 export default async function IndexPage({params: {locale: locale}}: {params: {locale: string}}) {
@@ -12,6 +12,7 @@ export default async function IndexPage({params: {locale: locale}}: {params: {lo
   } catch (error) {
     
   }
+  await new Promise((resolve) => setTimeout(resolve, 500));
  
   return (
     <div className="flex justify-between  fixed w-screen h-screen ">
