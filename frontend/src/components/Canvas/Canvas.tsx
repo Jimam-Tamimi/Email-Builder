@@ -38,12 +38,11 @@ export default function Canvas({pageContent}:{pageContent:any}) {
         <SelectLanguage />
       </div>
 
-      {!components?.length && (
         <p
           style={{ textShadow: "0px 0px 20px white" }}
-          className="capitalize tracking-wider"
+          className={`capitalize tracking-wider ease-in-out text-center  ${components?.length ? "opacity-0 scale-75    " : 
+            "opacity-100 scale-100 duration-300   delay-300"}`}
         >{pageContent?.canvas_component_not_available}</p>
-      )}
 
       <Reorder.Group
         axis="y"

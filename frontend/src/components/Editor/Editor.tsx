@@ -90,20 +90,7 @@ export default function Editor({ pageContent }: { pageContent: any }) {
         componentKey: editableComponentKeysData?.editableComponentKey,
         data,
       })
-    );
-    // Object.keys(data).forEach((key) => {
-    //   const [originalKey] = key.split("__separator__");
-
-    //   dispatch(
-    //     updateComponentEditableField({
-    //       productKey:
-    //         editableComponentKeysData?.editableGrandParentComponentKey,
-    //       componentKey: editableComponentKeysData?.editableComponentKey,
-    //       updatedKey: originalKey,
-    //       newValue: data[key],
-    //     })
-    //   );
-    // });
+    ); 
   };
 
   useEffect(() => {
@@ -185,7 +172,7 @@ export default function Editor({ pageContent }: { pageContent: any }) {
         <div onClick={e => handleUndo()} id="undo" className="p-2 rounded-full bg-[#b3b3b344]  dark:shadow-[0_0px_15px_#ffffff20] shadow-[0_0px_15px_#00000010]  hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out cursor-pointer">
           <FaArrowLeft />
         </div>
-        <h1   className="self-center text-3xl font-bold tracking-wide">
+        <h1   className={`self-center text-3xl font-bold tracking-wide`}>
           {pageContent?.editor_title}
         </h1>
         <div  onClick={e => handleRedo()} id="redo"  className="p-2 rounded-full bg-[#b3b3b344]  dark:shadow-[0_0px_15px_#ffffff20] shadow-[0_0px_15px_#00000010]  hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out cursor-pointer">
