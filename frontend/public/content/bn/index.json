@@ -1,0 +1,9 @@
+{
+  "meta_title": "ইমেইল বিল্ডার",
+  "meta_description": "ইমেইল বিল্ডার",
+  "sidebar_title": "কম্পোনেন্ট",
+  "editor_title": "এডিটর",
+  "editable_component_not_select": "এডিট করার জন্য একটি কম্পোনেন্টে ক্লিক করুন।",
+  "editor_apply_button_text": "সেভ করুন",
+  "canvas_component_not_available": "আপনার টেমপ্লেট তৈরি করতে সাইডবার থেকে কম্পোনেন্ট গুলি টেনে এখানে ফেলুন।"
+}

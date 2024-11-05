@@ -1,0 +1,9 @@
+{
+  "meta_title": "Email Builder",
+  "meta_description": "Email Builder",
+  "sidebar_title": "Components",
+  "editor_title": "Editor",
+  "editable_component_not_select": "Click on a component to edit it.",
+  "editor_apply_button_text": "Apply",
+  "canvas_component_not_available": "Drag components from the sidebar and drop here to create your template."
+}

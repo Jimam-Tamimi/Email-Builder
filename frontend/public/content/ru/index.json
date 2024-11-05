@@ -1,0 +1,9 @@
+{
+  "meta_title": "Конструктор писем",
+  "meta_description": "Конструктор писем",
+  "sidebar_title": "Компоненты",
+  "editor_title": "Редактор",
+  "editable_component_not_select": "Нажмите на компонент, чтобы отредактировать его.",
+  "editor_apply_button_text": "Применить",
+  "canvas_component_not_available": "Перетащите компоненты из боковой панели и отпустите здесь, чтобы создать шаблон."
+}
