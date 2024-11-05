@@ -1,6 +1,6 @@
-import Canvas from "@/Components/Canvas";
-import Editor from "@/Components/Editor";
-import Sidebar from "@/Components/Sidebar";
+import Canvas from "@/components/Canvas";
+import Editor from "@/components/Editor";
+import Sidebar from "@/components/Sidebar";
 import getPageContent from "@/helpers/getPageContent";
 
 export default async function IndexPage({params: {locale: locale}}: {params: {locale: string}}) {
