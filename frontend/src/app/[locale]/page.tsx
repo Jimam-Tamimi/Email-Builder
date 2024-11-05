@@ -12,7 +12,7 @@ export default async function IndexPage({params: {locale: locale}}: {params: {lo
   } catch (error) {
     
   }
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
  
   return (
     <div className="flex justify-between  fixed w-screen h-screen ">
