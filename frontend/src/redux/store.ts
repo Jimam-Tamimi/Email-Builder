@@ -31,7 +31,7 @@ const componentsTransform = createTransform(
     return {
       data: inboundState.data,
       editableComponentKeysData: inboundState.editableComponentKeysData,
-      componentsHistoryState: inboundState.componentsHistoryState,
+      // componentsHistoryState: inboundState.componentsHistoryState,
     };
   },
   
