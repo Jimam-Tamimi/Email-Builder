@@ -2,6 +2,7 @@
 import { ComponentDataType } from "@/types/component";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
+import NProgress from "nprogress";
 
 interface ComponentsState {
   data: ComponentDataType[];
@@ -76,6 +77,8 @@ const componentsSlice = createSlice({
         newValue: string;
       }>
     ) => {
+      NProgress.start();
+
       const { productKey, componentKey, updatedKey, newValue } = action.payload;
 
       // Find the parent component
@@ -135,66 +138,83 @@ const componentsSlice = createSlice({
         data: any;
       }>
     ) => {
-      const { productKey, componentKey, data } = action.payload;
+      try {
+        NProgress.start();
 
-      // Find the parent component
-      Object.keys(data).forEach((key) => {
-        const [updatedKey] = key.split("__separator__");
-        let newValue = data[key];
+        const { productKey, componentKey, data } = action.payload;
 
-        let editedComponent = state.data.find(
-          (component) => component.key === productKey
-        );
-        if (!editedComponent) return;
+        // Find the parent component
+        Object.keys(data).forEach((key) => {
+          const [updatedKey] = key.split("__separator__");
+          let newValue = data[key];
 
-        // Recursive function to find the child component
-        const findChildComponent = (children: any[], key: string): any => {
-          for (const child of children) {
-            if (child.key === key) return child;
-            if (Array.isArray(child.children)) {
-              const found = findChildComponent(child.children, key);
-              if (found) return found;
-            }
-          }
-          return null;
-        };
-
-        // Recursive function to update editable fields
-        const updateEditableField = (obj: any, key: string, value: string) => {
-          for (const k in obj) {
-            if (obj[k] && typeof obj[k] === "object") {
-              if (obj[k].editable && k === key) {
-                obj[k].value = value;
-                return true;
-              }
-              if (updateEditableField(obj[k], key, value)) {
-                return true;
-              }
-            }
-          }
-          return false;
-        };
-
-        if (productKey !== componentKey) {
-          // Find the child component
-          if (Array.isArray(editedComponent.children)) {
-            editedComponent = findChildComponent(
-              editedComponent.children,
-              componentKey
-            );
-          }
+          let editedComponent = state.data.find(
+            (component) => component.key === productKey
+          );
           if (!editedComponent) return;
-        }
 
-        // Update the specified field
-        updateEditableField(editedComponent, updatedKey, newValue);
-      });
+          // Recursive function to find the child component
+          const findChildComponent = (children: any[], key: string): any => {
+            for (const child of children) {
+              if (child.key === key) return child;
+              if (Array.isArray(child.children)) {
+                const found = findChildComponent(child.children, key);
+                if (found) return found;
+              }
+            }
+            return null;
+          };
 
-      state.componentsHistoryState = getUpdatedState(state);
+          // Recursive function to update editable fields
+          const updateEditableField = (
+            obj: any,
+            key: string,
+            value: string
+          ) => {
+            for (const k in obj) {
+              if (obj[k] && typeof obj[k] === "object") {
+                if (obj[k].editable && k === key) {
+                  obj[k].value = value;
+                  return true;
+                }
+                if (updateEditableField(obj[k], key, value)) {
+                  return true;
+                }
+              }
+            }
+            return false;
+          };
+
+          if (productKey !== componentKey) {
+            // Find the child component
+            if (Array.isArray(editedComponent.children)) {
+              editedComponent = findChildComponent(
+                editedComponent.children,
+                componentKey
+              );
+            }
+            if (!editedComponent) return;
+          }
+
+          // Update the specified field
+          updateEditableField(editedComponent, updatedKey, newValue);
+        });
+
+        state.componentsHistoryState = getUpdatedState(state);
+      } catch (e) {
+      } finally {
+        NProgress.done();
+      }
     },
-    setComponents: (state, action: PayloadAction<{data:ComponentDataType[],  ignoreHistory?:boolean}>) => {
+    setComponents: (
+      state,
+      action: PayloadAction<{
+        data: ComponentDataType[];
+        ignoreHistory?: boolean;
+      }>
+    ) => {
       state.data = action.payload.data;
-      if(!action.payload.ignoreHistory){
+      if (!action.payload.ignoreHistory) {
         state.componentsHistoryState = getUpdatedState(state);
       }
     },

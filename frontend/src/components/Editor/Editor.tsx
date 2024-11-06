@@ -19,6 +19,7 @@ import {
 import { Button } from "@nextui-org/button";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useForm } from "react-hook-form";
+import NProgress from 'nprogress';
 
 /**
  * Editor Component
@@ -143,17 +144,20 @@ export default function Editor({ pageContent }: { pageContent: any }) {
     if (
       componentsHistoryState.componentsHistory.length > 0 &&
       componentsHistoryState.currentIndex <
-        componentsHistoryState.componentsHistory.length - 1
+      componentsHistoryState.componentsHistory.length - 1
     ) {
+      
       const nextState =
-        componentsHistoryState.componentsHistory[componentsHistoryState.currentIndex + 1];
+      componentsHistoryState.componentsHistory[componentsHistoryState.currentIndex + 1];
       if (nextState) {
+        NProgress.start();
         dispatch(setComponents({ data: nextState, ignoreHistory: true }));
         dispatch(
           setComponentsHistoryStateCurrentIndex(
             componentsHistoryState.currentIndex + 1
           )
         );
+        NProgress.done();
       }
     }
   };
@@ -164,16 +168,19 @@ export default function Editor({ pageContent }: { pageContent: any }) {
   const handleUndo = () => {
     if (componentsHistoryState.componentsHistory.length > 0) {
       const previousState =
-        componentsHistoryState.componentsHistory[componentsHistoryState.currentIndex - 1];
+      componentsHistoryState.componentsHistory[componentsHistoryState.currentIndex - 1];
       if (previousState) {
+        NProgress.start();
         dispatch(setComponents({ data: previousState, ignoreHistory: true }));
         dispatch(
           setComponentsHistoryStateCurrentIndex(
             componentsHistoryState.currentIndex - 1
           )
         );
+        NProgress.done();
       }
     }
+
   };
 
   return (
