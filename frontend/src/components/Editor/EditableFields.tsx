@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Input } from "@nextui-org/input";
+import { Select, SelectItem } from "@nextui-org/select";
 import { ComponentDataType } from "@/types/component";
 import { v4 as uuidv4 } from "uuid";
 
@@ -9,18 +10,18 @@ import { v4 as uuidv4 } from "uuid";
  * `EditableFields` is a recursive component that renders editable fields based on the structure of the provided `data` object.
  * It handles the display of fields with the `editable` property, including form inputs and select options.
  * It also supports nested data structures, recursively rendering child components if the `data` contains nested objects.
- * 
+ *
  * @component
- * 
+ *
  * @param {Object} props - The props passed to the component.
  * @param {ComponentDataType | ComponentDataType[]} props.data - The component data, which can be an object or an array of component data.
  *   - If the data is an array, it will render the fields for each component in the array.
  * @param {number} [props.depth=0] - The current depth in the recursive structure. This value is used to adjust the styling and indentation of nested components.
  * @param {Object} props.register - The function used for form registration (typically from `react-hook-form`). It binds the form fields to the component.
  * @param {ComponentDataType | undefined} props.editableComponent - The current editable component data. This is used for keeping track of which component is being edited.
- * 
+ *
  * @returns {JSX.Element | null} The rendered form fields based on the provided `data`. It returns `null` if there is no `data`.
- * 
+ *
  * @example
  * <EditableFields
  *   data={componentData}
@@ -31,9 +32,9 @@ import { v4 as uuidv4 } from "uuid";
 
 /**
  * The props interface for `EditableFields` component.
- * 
+ *
  * @interface EditableFieldsProps
- * 
+ *
  * @param {ComponentDataType | ComponentDataType[]} data - The component data, which can be a single object or an array of objects.
  *   - The `data` can represent one or more components that contain editable fields.
  * @param {number} [depth=0] - The depth level of the component in the recursive structure. Used to adjust styles for nested components.
@@ -76,27 +77,39 @@ const EditableFields: React.FC<EditableFieldsProps> = ({
         // If the field is editable, render an input or select
         if (field?.editable) {
           return (
-            <div key={i} className="my-2">
+            <div key={i} className="my-2 ">
               {/* Render an Input field for editable fields */}
-              <Input
-                {...register(`${key}__separator__${uuidv4().slice(0, 4)}`)} // Register input field for react-hook-form
-                key={field.value} // Ensure uniqueness by using value as key
-                required // Make the field required
-                type={field.type ? field.type : "text"} // Set input type based on field type or default to "text"
-                variant="underlined" // Use underlined variant for the input
-                defaultValue={field.value} // Set the default value from the field data
-                label={field.label} // Label for the input field
-              />
-              {/* Render a select dropdown if options are provided */}
-              {field?.options && (
-                <select defaultValue={field.value} className="my-2">
-                  {field.options.map((option: any) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              )}
+              {
+                
+                field?.options ? (
+                  <Select 
+                  {...register(`${key}__separator__${uuidv4().slice(0, 4)}`)} // Register input field for react-hook-form
+                  key={field.value} // Ensure uniqueness by using value as key
+
+                  classNames={{
+                    listboxWrapper: "dark:bg-[#18181b] shadow-sm bg-[#ffffff]  border-t-0",
+                  }}
+                  label={field.label} // Label for the input field
+                  defaultSelectedKeys={[field.value]} variant={"underlined"} >
+                    
+                    {field?.options.map((option:any) => (
+                      <SelectItem  key={option}>{option}</SelectItem>
+                    ))}
+                  </Select>
+                ) : (
+                  <Input
+                  {...register(`${key}__separator__${uuidv4().slice(0, 4)}`)} // Register input field for react-hook-form
+                  key={field.value} // Ensure uniqueness by using value as key
+                  required // Make the field required
+                  type={field.type ? field.type : "text"} // Set input type based on field type or default to "text"
+                  variant="underlined" // Use underlined variant for the input
+                  defaultValue={field.value} // Set the default value from the field data
+                  label={field.label} // Label for the input field
+                />
+                )
+                
+                
+              } 
             </div>
           );
         }

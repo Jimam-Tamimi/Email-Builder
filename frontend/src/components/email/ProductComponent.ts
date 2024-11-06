@@ -108,6 +108,7 @@ const ProductComponent: ComponentDataType = {
             value: "cover",
             editable: true,
             label: "Image Object Fit",
+            options: ["cover", "contain", "fill", "none", "scale-down"],
           },
           height: {
             value: "320px",

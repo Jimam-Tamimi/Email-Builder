@@ -10,6 +10,7 @@ interface ComponentEditableFieldType {
   value?: any;
   editable?: boolean;
   label?: string;
+  options?: string[];
 }
 
 /**
