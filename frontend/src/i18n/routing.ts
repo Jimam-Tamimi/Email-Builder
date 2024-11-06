@@ -1,5 +1,5 @@
-import {createLocalizedPathnamesNavigation} from 'next-intl/navigation';
 import { defineRouting } from 'next-intl/routing';
+import { createLocalizedPathnamesNavigation } from 'next-intl/navigation';
 
 
 export const locales =  ['en', "de", "bn", 'ru'];
@@ -19,5 +19,4 @@ export const routing = defineRouting({
 export type Pathnames = keyof typeof routing.pathnames;
 export type Locale = (typeof routing.locales)[number];
 
-export const {Link, getPathname, redirect, usePathname, useRouter} =
-  createLocalizedPathnamesNavigation(routing);
+export const {Link, getPathname, redirect, usePathname, useRouter} = createLocalizedPathnamesNavigation(routing);
