@@ -3,24 +3,18 @@ import { getMessages } from "next-intl/server";
 import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import "react-toastify/dist/ReactToastify.css";
-import {  ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import ReduxProvider from "@/hoc/ReduxProvider";
 import QueryClientProvider from "@/hoc/QueryClientProvider";
 import "nprogress/nprogress.css";
 
-export async function generateMetadata({params: {locale: locale}}: {params: {locale: string}}) {
-
-    let pageContent = {
-      meta_title: "",
-      meta_description: "",
-    }
-  try {
-    
-    pageContent = await getPageContent("index", locale)
-  } catch (error) {
-    
-  }
-
+export async function generateMetadata({
+  params: { locale: locale },
+}: {
+  params: { locale: string };
+}) {
+  let pageContent : any = await getPageContent("index", locale);
+  
   return {
     title: pageContent?.meta_title || "",
     description: pageContent?.meta_description,
@@ -33,7 +27,6 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   const messages = await getMessages();
-
 
   return (
     <html lang="en">
@@ -57,10 +50,7 @@ export default async function Layout({
                 draggable
               />
               <NextUIProvider>
-                <QueryClientProvider>
-                  {/* check if user is authenticated. if not then show welcome else render children */}
-                  {/* <Welcome /> */}
-                  
+                <QueryClientProvider> 
                   {children}
                 </QueryClientProvider>
               </NextUIProvider>
