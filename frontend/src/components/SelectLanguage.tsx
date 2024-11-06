@@ -3,7 +3,6 @@
 import React, { Key, useState } from "react";
 import { FaAngleDown } from "react-icons/fa";
 import { useLocale } from 'next-intl';
-import { useParams } from "next/navigation";
 import { usePathname, useRouter } from "@/i18n/routing";
 
 /**
