@@ -1,22 +1,52 @@
+/**
+ * @file Sidebar.tsx
+ * @description Sidebar component providing a draggable interface for components.
+ * Allows users to drag components from the sidebar into the canvas. 
+ * Displays a preview of the dragged component during the drag action.
+ */
+
 'use client'
+
 import { LiaGripLinesSolid } from "react-icons/lia";
 import ProductComponent from "../email/ProductComponent";
 import { useState } from "react";
 import DynamicComponent from "../DynamicComponent";
 import { ComponentDataType } from "@/types/component";
 
+// List of available components for drag-and-drop
 let components = [ ProductComponent ];
 
-export default function Sidebar({pageContent}:{pageContent:any}) {
-  const [draggingComponent, setDraggingComponent] = useState<ComponentDataType >();
+/**
+ * Sidebar Component
+ * 
+ * @component
+ * @param {Object} props - Component properties.
+ * @param {any} props.pageContent - Content for displaying text elements such as the sidebar title.
+ * 
+ * @returns {JSX.Element} The rendered Sidebar component.
+ * 
+ * @description
+ * The `Sidebar` component renders a list of components that users can drag onto a designated canvas area.
+ * When a component is dragged, a live preview follows the cursor, enhancing the user experience.
+ * This component is designed to work with a drag-and-drop interface, where components can be dropped
+ * onto a canvas to be added dynamically.
+ */
+export default function Sidebar({ pageContent }: { pageContent: any }) {
+  const [draggingComponent, setDraggingComponent] = useState<ComponentDataType>();
   const [previewPosition, setPreviewPosition] = useState({ x: 0, y: 0 });
   const [offsetPercent, setOffsetPercent] = useState({ x: 0, y: 0 });
 
+  /**
+   * Handle the drag start event, setting up drag data and preview positioning.
+   * 
+   * @param {React.DragEvent<HTMLDivElement>} e - The drag event.
+   * @param {ComponentDataType} component - The component data being dragged.
+   */
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, component: ComponentDataType) => {
     e.dataTransfer.setData("component", JSON.stringify(component));
     setDraggingComponent(component);  
 
-    // Calculate offset of cursor within the element as a percentage
+    // Calculate offset of the cursor within the component as a percentage
     const rect = e.currentTarget.getBoundingClientRect();
     const offsetXPercent = ((e.clientX - rect.left) / rect.width) * 100;
     const offsetYPercent = ((e.clientY - rect.top) / rect.height) * 100;
@@ -25,7 +55,7 @@ export default function Sidebar({pageContent}:{pageContent:any}) {
     // Hide default drag image
     e.dataTransfer.setDragImage(new Image(), 0, 0);
 
-    // Update preview position on drag
+    // Update preview position as the item is dragged
     const updatePosition = (e: DragEvent) => {
       setPreviewPosition({
         x: e.clientX - (rect.width * offsetXPercent) / 100,
@@ -34,7 +64,7 @@ export default function Sidebar({pageContent}:{pageContent:any}) {
     };
     document.addEventListener("dragover", updatePosition);
 
-    // Clean up when drag ends
+    // Clean up preview when drag ends
     e.target.addEventListener("dragend", () => {
       setDraggingComponent(undefined);
       document.removeEventListener("dragover", updatePosition);
@@ -45,6 +75,7 @@ export default function Sidebar({pageContent}:{pageContent:any}) {
     <div className="w-[22%] max-h-screen h-screen overflow-y-scroll p-5 scrollbar-hide select-none gap-4 flex flex-col dark:shadow-[0_0px_15px_#ffffff20] shadow-[0_0px_15px_#00000010]">
       <h1 className="text-center text-3xl font-bold tracking-wide mb-4">{pageContent?.sidebar_title}</h1>
 
+      {/* Render draggable components */}
       {components.map((component, i) => (
         <div
           key={i}
@@ -59,7 +90,7 @@ export default function Sidebar({pageContent}:{pageContent:any}) {
         </div>
       ))}
 
-      {/* Preview Component */}
+      {/* Preview of the component during drag */}
       {draggingComponent && (
         <div
           style={{

@@ -1,5 +1,47 @@
 import { ComponentDataType } from "@/types/component";
 
+
+/**
+ * @constant {ComponentDataType} ProductComponent
+ * Represents a structured product component with customizable styles, text, and layout, designed to be rendered as HTML and to support inline editing.
+ *
+ * @property {string} key - Unique identifier for the component.
+ * @property {string} label - Display label for the product component.
+ * @property {string} element - Specifies the HTML element to render (in this case, "section" for the root).
+ * @property {ComponentAttributesType} attributes - Collection of attributes for the root section element.
+ * - `style`: Configures the main container's styling, including `margin`, `width`, `backgroundColor`, `padding`, and `borderRadius`.
+ *
+ * @property {ComponentDataType[]} children - Array containing nested components for the product layout, each representing distinct parts of the product display:
+ *   - `PRODUCT.IMAGE`: Image component for the product.
+ *     - `src`: Editable image source URL.
+ *     - `alt`: Editable image alt text.
+ *     - `style`: Customizable image styles, such as `width`, `borderRadius`, `objectFit`, and `height`.
+ *
+ *   - Section element:
+ *     - Contains nested components for product details like title, description, price, and a call-to-action button.
+ *     - `PRODUCT.CLASSIC_WATCHES_TEXT`: Represents the product title.
+ *       - `children.value`: Editable title text.
+ *       - `attributes.style`: Styles for title text, including `marginTop`, `fontSize`, `fontWeight`, `lineHeight`, and `color`.
+ *
+ *     - `PRODUCT.DESCRIPTION`: Represents the product description.
+ *       - `children.value`: Editable description text.
+ *       - `attributes.style`: Styles for description, including `marginTop`, `fontSize`, `lineHeight`, and `color`.
+ *
+ *     - `PRODUCT.PRICE`: Represents the product price.
+ *       - `children.value`: Editable price text.
+ *       - `attributes.style`: Styles for price text, such as `fontSize`, `fontWeight`, and `color`.
+ *
+ *     - `PRODUCT.BUY_BUTTON`: Represents the buy button.
+ *       - `children.value`: Editable button text.
+ *       - `attributes.href`: Editable URL for the button link.
+ *       - `attributes.style`: Styles for the button, including `marginTop`, `borderRadius`, `backgroundColor`, `padding`, `color`, and `fontWeight`.
+ *
+ * @example
+ * import ProductComponent from "@/types/component";
+ * // Usage: Render ProductComponent in a dynamic UI or editor, allowing inline editing of styles and content.
+ */
+
+
 const ProductComponent: ComponentDataType = {
   key: "PRODUCT",
   label: "Product",
