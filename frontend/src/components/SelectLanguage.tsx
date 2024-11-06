@@ -12,15 +12,11 @@ export interface LanguageType {
     // image: string,
     language: string,
     locale: string,
-}
-
-
-
+} 
 
 export default function SelectLanguage() {
     const locale = useLocale();
-    const router = useRouter();
-    const params = useParams();
+    const router = useRouter(); 
 
     const pathname = usePathname();
     const [open, setOpen] = useState<Boolean>(false)
