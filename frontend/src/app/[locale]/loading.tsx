@@ -1,7 +1,5 @@
 import PreLoader from "@/components/PreLoader";
 
- 
-
 export default function loading() {
 
   return (
