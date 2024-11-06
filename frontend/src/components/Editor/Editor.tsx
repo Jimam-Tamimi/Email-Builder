@@ -1,10 +1,4 @@
-/**
- * @file Editor.tsx
- * @description Editor component that provides an interface for editing component fields and history-based undo/redo functionality.
- * This component is part of a dynamic drag-and-drop editor with form-based field editing.
- */
-
-"use client";
+"use client"
 
 import React, { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
@@ -12,53 +6,56 @@ import { RootState, useAppDispatch } from "@/redux/store";
 import { ComponentDataType } from "@/types/component";
 import EditableFields from "./EditableFields";
 import {
-  setComponents,
-  setComponentsHistoryStateCurrentIndex,
   updateComponentEditableFields,
 } from "@/redux/slices/componentsSlice";
 import { Button } from "@nextui-org/button";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { useForm } from "react-hook-form";
-import NProgress from 'nprogress';
+import EditorHeader from "./EditorHeader";
+import { useForm } from 'react-hook-form';
 
 /**
- * Editor Component
+ * The `Editor` component provides an interface for editing components in the application.
+ * It allows users to view and modify fields of a selected component, as well as apply changes.
+ * The component integrates with Redux for state management and supports history functionality.
+ *
+ * This component is structured to:
+ * - Display a header (using `EditorHeader`).
+ * - Allow users to edit fields of a component using `EditableFields`.
+ * - Use a form submission mechanism to update the component's editable fields.
  *
  * @component
- * @param {Object} props - Component properties.
- * @param {any} props.pageContent - Content data, providing text for UI elements like button labels.
- *
- * @returns {JSX.Element} The rendered Editor component.
- *
- * @description
- * The `Editor` component allows for the selection and editing of component fields within a drag-and-drop editor.
- * It includes an undo/redo feature that allows users to navigate through edit history, making it easy to revert or
- * reapply changes. The form-based editing is handled with `react-hook-form`.
+ * @example
+ * const pageContent = {
+ *   editor_title: "Editor",
+ *   editor_apply_button_text: "Apply Changes",
+ *   editable_component_not_select: "No component selected"
+ * };
+ * <Editor pageContent={pageContent} />
+ * 
+ * @param {Object} props - Component props
+ * @param {Object} props.pageContent - Contains data related to the page, such as titles, button text, and messages.
+ * @returns {JSX.Element} The rendered editor with form fields and buttons for component editing.
  */
 export default function Editor({ pageContent }: { pageContent: any }) {
   const [editableComponent, setEditableComponent] = useState<ComponentDataType>();
-  
-  const {
-    register,
-    handleSubmit,
-  } = useForm();
-  
+
+  const { register, handleSubmit } = useForm();
   const dispatch = useAppDispatch();
 
-  // Redux selectors for component and history states
+  // Redux state selectors
   const components = useSelector((state: RootState) => state.components.data);
-  const componentsHistoryState = useSelector(
-    (state: RootState) => state.components.componentsHistoryState
-  );
+ 
   const editableComponentKeysData = useSelector(
     (state: RootState) => state.components.editableComponentKeysData
   );
 
   /**
-   * Finds a component by its key within a nested structure.
-   * @param {any} data - The data structure where the component resides.
-   * @param {string} targetKey - The key of the target component to find.
-   * @returns {ComponentDataType | undefined} The found component or `undefined` if not found.
+   * A recursive function that searches for the editable component in the nested structure of the components.
+   * It looks through arrays and nested children to find a component with the matching key.
+   *
+   * @function
+   * @param {any} data - The component data or array of components.
+   * @param {string} targetKey - The key of the component to find.
+   * @returns {ComponentDataType | undefined} The found editable component or undefined if not found.
    */
   const findEditableComponent = useCallback(
     (data: any, targetKey: string): ComponentDataType | undefined => {
@@ -81,7 +78,14 @@ export default function Editor({ pageContent }: { pageContent: any }) {
     []
   );
 
-  // Effect for updating the editable component based on keys in `editableComponentKeysData`
+  /**
+   * An effect hook that runs when the component mounts or when the components or editable keys data changes.
+   * It looks for the editable component based on the provided keys and sets the state for the editable component.
+   *
+   * @function
+   * @param {void}
+   * @returns {void}
+   */
   useEffect(() => {
     let editableComp =
       components.find(
@@ -105,8 +109,12 @@ export default function Editor({ pageContent }: { pageContent: any }) {
   }, [components, editableComponentKeysData, findEditableComponent]);
 
   /**
-   * Submits edited data, dispatching an update action to the Redux store.
-   * @param {any} data - The form data to submit.
+   * Handles the form submission. It dispatches an action to update the editable fields of the component
+   * in the Redux store based on the provided data.
+   * 
+   * @function
+   * @param {any} data - The form data representing the updated fields of the component.
+   * @returns {void}
    */
   const onSubmit = async (data: any) => {
     dispatch(
@@ -118,95 +126,15 @@ export default function Editor({ pageContent }: { pageContent: any }) {
     );
   };
 
-  /**
-   * Sets up event listeners for keyboard-based undo/redo functionality.
-   */
-  useEffect(() => {
-    const handleUndoRedo = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "z") {
-        handleRedo();
-      }
-      if (event.ctrlKey && event.key === "z") {
-        handleUndo();
-      }
-    };
-
-    window.addEventListener("keydown", handleUndoRedo);
-    return () => {
-      window.removeEventListener("keydown", handleUndoRedo);
-    };
-  }, [componentsHistoryState, dispatch]);
-
-  /**
-   * Handles the redo action, applying the next state in the history.
-   */
-  const handleRedo = () => {
-    if (
-      componentsHistoryState.componentsHistory.length > 0 &&
-      componentsHistoryState.currentIndex <
-      componentsHistoryState.componentsHistory.length - 1
-    ) {
-      
-      const nextState =
-      componentsHistoryState.componentsHistory[componentsHistoryState.currentIndex + 1];
-      if (nextState) {
-        NProgress.start();
-        dispatch(setComponents({ data: nextState, ignoreHistory: true }));
-        dispatch(
-          setComponentsHistoryStateCurrentIndex(
-            componentsHistoryState.currentIndex + 1
-          )
-        );
-        NProgress.done();
-      }
-    }
-  };
-
-  /**
-   * Handles the undo action, applying the previous state in the history.
-   */
-  const handleUndo = () => {
-    if (componentsHistoryState.componentsHistory.length > 0) {
-      const previousState =
-      componentsHistoryState.componentsHistory[componentsHistoryState.currentIndex - 1];
-      if (previousState) {
-        NProgress.start();
-        dispatch(setComponents({ data: previousState, ignoreHistory: true }));
-        dispatch(
-          setComponentsHistoryStateCurrentIndex(
-            componentsHistoryState.currentIndex - 1
-          )
-        );
-        NProgress.done();
-      }
-    }
-
-  };
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="w-[26%] max-h-screen h-screen overflow-y-scroll p-5 scrollbar-hide select-none scrollbar-thumb-gray-400 dark:shadow-[0_0px_15px_#ffffff20] shadow-[0_0px_15px_#00000010] scrollbar-track-gray-200 flex flex-col gap-5"
     >
-      <div className="flex justify-between items-center">
-        <div
-          onClick={handleUndo}
-          id="undo"
-          className="p-2 rounded-full bg-[#b3b3b344] dark:shadow-[0_0px_15px_#ffffff20] shadow-[0_0px_15px_#00000010] hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out cursor-pointer"
-        >
-          <FaArrowLeft />
-        </div>
-        <h1 className="self-center text-3xl font-bold tracking-wide">
-          {pageContent?.editor_title}
-        </h1>
-        <div
-          onClick={handleRedo}
-          id="redo"
-          className="p-2 rounded-full bg-[#b3b3b344] dark:shadow-[0_0px_15px_#ffffff20] shadow-[0_0px_15px_#00000010] hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out cursor-pointer"
-        >
-          <FaArrowRight />
-        </div>
-      </div>
+      {/* Editor Header: Displays the title and undo/redo buttons */}
+      <EditorHeader pageContent={pageContent} />
+      
+      {/* Editable Fields: Renders fields that can be modified */}
       <div>
         {editableComponent && (
           <EditableFields
@@ -216,6 +144,8 @@ export default function Editor({ pageContent }: { pageContent: any }) {
           />
         )}
       </div>
+
+      {/* Submit Button: Appears if a component is selected, triggers the form submission */}
       {editableComponentKeysData?.editableComponentKey &&
       editableComponentKeysData?.editableGrandParentComponentKey ? (
         <Button type="submit" size="sm" color="primary" variant="shadow">
