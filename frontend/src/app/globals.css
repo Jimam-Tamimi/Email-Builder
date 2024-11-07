@@ -143,3 +143,13 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+
+.component-hovered{
+  border: 3px solid rgb(61, 161, 255); 
+}
+
+
+.component-selected{
+  border: 3px solid rgb(0, 109, 211); 
+}
