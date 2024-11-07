@@ -5,6 +5,7 @@
  * @property {any} [value] - The current value of the field.
  * @property {boolean} [editable] - Indicates if the field is editable by the user.
  * @property {string} [label] - Label for the field, used for display purposes in forms.
+ * @property {string} [options] - Array of options for select fields, if applicable.
  */
 interface ComponentEditableFieldType {
   value?: any;

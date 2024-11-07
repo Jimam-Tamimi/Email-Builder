@@ -15,8 +15,8 @@ import { ComponentDataType } from "@/types/component";
  *   - `PRODUCT.IMAGE`: Image component for the product.
  *     - `src`: Editable image source URL.
  *     - `alt`: Editable image alt text.
- *     - `style`: Customizable image styles, such as `width`, `borderRadius`, `objectFit`, and `height`.
- *
+ *     - `style`: Customizable image styles, such as `width`, `borderRadius`, `objectFit`, and `height`. 
+ *    
  *   - Section element:
  *     - Contains nested components for product details like title, description, price, and a call-to-action button.
  *     - `PRODUCT.CLASSIC_WATCHES_TEXT`: Represents the product title.
