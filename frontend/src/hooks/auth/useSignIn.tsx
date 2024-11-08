@@ -1,12 +1,16 @@
 import api from "@/api/api";
 import { useRouter } from "@/i18n/routing";
 import { setError, setLoading, signInSuccess } from "@/redux/slices/authSlice";
-import { useAppDispatch } from "@/redux/store";
+import { RootState, useAppDispatch } from "@/redux/store";
 import { AuthType, SignInFormDataType } from "@/types/auth";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import NProgress from "nprogress";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import useCreateTemplate from "../builder/useCreateTemplate";
+import { v4 as uuidv4 } from "uuid";
+import { clearComponents } from "@/redux/slices/componentsSlice";
 
 /**
  * Custom hook to handle user sign-in using a mutation.
@@ -34,15 +38,28 @@ import { toast } from "react-toastify";
 const useSignIn = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const createTemplate = useCreateTemplate();
+  const componentsData = useSelector(
+    (state: RootState) => state.components.data
+  );
+
   return useMutation({
     mutationFn: signIn,
     onMutate: () => {
       dispatch(setLoading(true));
     },
     onSuccess: async (data: AuthType) => {
-      router.push("/");
       dispatch(signInSuccess(data)); // Dispatch sign-in success
+
       toast.success("Sign In Successful!!");
+      await createTemplate.mutateAsync({
+        title: "Untitled Template" + uuidv4().slice(0, 4),
+        description: "",
+        data: componentsData,
+      });
+      setTimeout(() => {
+        window.location.href = "http://localhost:3001/";
+      }, 1000);
     },
     onError: (error: AxiosError) => {
       if (error.response) {
