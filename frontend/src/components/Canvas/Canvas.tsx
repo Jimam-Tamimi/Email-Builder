@@ -73,7 +73,7 @@ export default function Canvas({ pageContent }: { pageContent: any }) {
 
   return (
     <div
-      className={`w-full flex ${!components?.length && "justify-center"} relative py-5 items-center flex-col min-h-screen overflow-y-scroll`}
+      className={`w-[66vw] flex ${!components?.length && "justify-center"} relative py-5 items-center flex-col min-h-screen overflow-y-scroll`}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       style={{ cursor: isDragging ? "grabbing" : "default" }}

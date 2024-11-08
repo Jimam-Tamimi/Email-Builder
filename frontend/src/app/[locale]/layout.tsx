@@ -11,6 +11,7 @@ import getPageContent from "@/helpers/getPageContent";
 import { MdOutlineClose } from 'react-icons/md';
 import { NextUIProvider } from "@/hoc/NextUiProvider";
 import { routing } from "@/i18n/routing";
+import AnonymousUserEmailBuilder from "./auth/components/AnonymousUserEmailBuilder";
 
 
 /**
@@ -118,7 +119,8 @@ export default async function Layout({
                 {/* Query client provider for React Query setup */}
                 <QueryClientProvider> 
                   {/* Render the children components */}
-                  {children}
+                  <AnonymousUserEmailBuilder params={{ locale: 'en' }} />
+                  {/* {children} */}
                 </QueryClientProvider>
               </NextUIProvider>
             </ThemeProvider>

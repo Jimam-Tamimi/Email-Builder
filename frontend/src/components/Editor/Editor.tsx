@@ -129,7 +129,7 @@ export default function Editor({ pageContent }: { pageContent: any }) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-[26%] max-h-screen h-screen overflow-y-scroll p-5 scrollbar-hide select-none scrollbar-thumb-gray-400 dark:shadow-[0_0px_15px_#ffffff20] shadow-[0_0px_15px_#00000010] scrollbar-track-gray-200 flex flex-col gap-5"
+      className="w-[18vw] max-h-screen h-screen overflow-y-scroll p-5 scrollbar-hide select-none scrollbar-thumb-gray-400 dark:shadow-[0_0px_15px_#ffffff20] shadow-[0_0px_15px_#00000010] scrollbar-track-gray-200 flex flex-col gap-5"
     >
       {/* Editor Header: Displays the title and undo/redo buttons */}
       <EditorHeader pageContent={pageContent} />
