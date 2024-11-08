@@ -50,6 +50,52 @@ export const routing = defineRouting({
   localePrefix: "always",  // The locale will always appear in the URL path.
   pathnames: {
     '/': '/',  // Map the root path (/) to itself (i.e., no change).
+
+
+
+
+
+
+
+    //  auth routes
+    '/auth/sign-in/': {
+      en: '/auth/sign-in/',
+      de: '/auth/anmelden/',
+      bn: '/auth/সাইন-ইন/',
+      ru: '/auth/войти/',
+    },
+    '/auth/sign-up/': {
+      en: '/auth/sign-up/',
+      de: '/auth/registrieren/',
+      bn: '/auth/সাইন-আপ/',
+      ru: '/auth/регистрация/',
+    },
+    '/auth/forgot-password/': {
+      en: '/auth/forgot-password/',
+      de: '/auth/passwort-vergessen/',
+      bn: '/auth/পাসওয়ার্ড-ভুলে-গেছি/',
+      ru: '/auth/забыли-пароль/',
+    },
+    '/auth/reset-password/': {
+      en: '/auth/reset-password/',
+      de: '/auth/passwort-zurücksetzen/',
+      bn: '/auth/পাসওয়ার্ড-রিসেট/',
+      ru: '/auth/сбросить-пароль/',
+    },
+    '/auth/verify-email/': {
+      en: '/auth/verify-email/',
+      de: '/auth/e-mail-bestätigen/',
+      bn: '/auth/ইমেইল-যাচাই/',
+      ru: '/auth/подтвердить-электронную-почту/',
+    },
+    '/auth/verify-phone/': {
+      en: '/auth/verify-phone/',
+      de: '/auth/telefon-bestätigen/',
+      bn: '/auth/ফোন-যাচাই/',
+      ru: '/auth/подтвердить-телефон/',
+    }
+ 
+    
   }
 }); 
 

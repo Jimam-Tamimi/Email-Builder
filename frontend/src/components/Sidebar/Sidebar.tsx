@@ -13,6 +13,8 @@ import { useState } from "react";
 import DynamicComponent from "../DynamicComponent";
 import { ComponentDataType } from "@/types/component";
 import Auth from "@/app/[locale]/auth/components/Auth";
+import ProtectedComponent from "@/hoc/auth/ProtectedComponent";
+import AnonymousComponent from "@/hoc/auth/AnonymousComponent";
 
 // List of available components for drag-and-drop
 let components = [ProductComponent];
@@ -121,8 +123,9 @@ export default function Sidebar({ pageContent }: { pageContent: any }) {
       )}
     </div>
       <div className="w-full absolute flex-col dark:shadow-[0_0px_15px_#ffffff20]  flex bottom-0 dark:bg-black bg-white border-t-[1px] dark:border-gray-600 border-gray-300 py-4 px-4  left-0">
-        
+        <AnonymousComponent>
         <Auth pageContent={pageContent} />
+        </AnonymousComponent>
       </div>
     </div>
   );

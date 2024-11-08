@@ -38,11 +38,7 @@ export default function SignIn({
   const signUpMutation = useSignUp();
   const onSubmit = (data: SignUpFormDataType) => {
     // Handle form submission
-    console.log(data);
-
     
-    toast.success("Dummy Registration Success!")
-    return; // must remove return after setting up apis.
     signUpMutation.mutateAsync(data, {
       onSuccess: async (data) => {
         reset();

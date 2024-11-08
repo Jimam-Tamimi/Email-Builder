@@ -1,5 +1,7 @@
 import { AuthType } from "@/types/auth";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { persistReducer } from "redux-persist";
+import cookieStorage from "../../storage/cookieStorage";
 
 /**
  * Redux slice for managing authentication state in the application.
@@ -136,4 +138,15 @@ const authSlice = createSlice({
 export const { signInSuccess, signOut, setError, setLoading } = authSlice.actions;
 
 // Export the reducer to be included in the store
-export default authSlice.reducer;
+
+
+
+
+
+ 
+const authPersistConfig = {
+  key: 'auth',
+  storage: cookieStorage,
+};
+
+export default persistReducer(authPersistConfig, authSlice.reducer);

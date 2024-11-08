@@ -78,7 +78,7 @@ export default function Auth({ pageContent }: any) {
         hideCloseButton
         backdrop="blur"
         classNames={{
-          base: "dark:shadow-[0_0px_15px_#ffffff20] shadow-[0_0px_15px_#00000010] backdrop-blur-[15px] bg-[#d1e2ff47] dark:bg-[rgba(255,255,255,0.1)] py-2",
+          base: "dark:shadow-[0_0px_15px_#ffffff20] shadow-[0_0px_15px_#00000010] backdrop-blur-[20px] bg-[#d1e2ff47] dark:bg-[#00000040] py-2",
         }}
         isOpen={pathname?.startsWith("/auth")}
         onOpenChange={(e) => router.push("/")}

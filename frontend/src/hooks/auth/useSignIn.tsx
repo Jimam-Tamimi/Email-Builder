@@ -1,4 +1,5 @@
 import api from "@/api/api";
+import { useRouter } from "@/i18n/routing";
 import { setError, setLoading, signInSuccess } from "@/redux/slices/authSlice";
 import { useAppDispatch } from "@/redux/store";
 import { AuthType, SignInFormDataType } from "@/types/auth";
@@ -31,6 +32,7 @@ import { toast } from "react-toastify";
  **/
 
 const useSignIn = () => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   return useMutation({
     mutationFn: signIn,
@@ -38,6 +40,7 @@ const useSignIn = () => {
       dispatch(setLoading(true));
     },
     onSuccess: async (data: AuthType) => {
+      router.push("/");
       dispatch(signInSuccess(data)); // Dispatch sign-in success
       toast.success("Sign In Successful!!");
     },

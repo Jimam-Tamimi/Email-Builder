@@ -13,14 +13,16 @@ const AuthModalHeader = ({ pageContent }: AuthModalHeaderProps) => {
     const [title, setTitle] = useState('');
 
     useEffect(() => {
-        const newTitle = 
-            pathname === '/auth/sign-in/' ? pageContent?.sign_in_title || 'Sign In' :
-            pathname === '/auth/forgot-password/' ? pageContent?.forgot_password_title || 'Forgot Password' :
-            pathname === '/auth/reset-password/' ? pageContent?.reset_password_title || 'Reset Password' :
-            pathname === '/auth/verify-phone/' ? pageContent?.verify_your_number_title || '' :
-            pathname === '/auth/verify-email/' ? pageContent?.verify_your_email_title || 'Verify Your Email' :
-            pathname === '/auth/sign-up/' ?
-            pageContent?.sign_up_title || 'Create A New Account' : pageContent?.welcome_meta_title;
+        const titles: { [key: string]: any } = {
+            '/auth/sign-in/': pageContent?.sign_in_title || 'Sign In',
+            '/auth/forgot-password/': pageContent?.forgot_password_title || 'Forgot Password',
+            '/auth/reset-password/': pageContent?.reset_password_title || 'Reset Password',
+            '/auth/verify-phone/': pageContent?.verify_your_number_title || '',
+            '/auth/verify-email/': pageContent?.verify_your_email_title || 'Verify Your Email',
+            '/auth/sign-up/': pageContent?.sign_up_title || 'Create A New Account'
+        };
+
+        const newTitle = titles[pathname] || pageContent?.welcome_meta_title;
         setTitle(newTitle);
         document.title = newTitle;
         return () => {

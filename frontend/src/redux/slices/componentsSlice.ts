@@ -3,8 +3,10 @@ import { ComponentDataType } from "@/types/component";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 import NProgress from "nprogress";
+import { createTransform, persistReducer } from "redux-persist";
+import storage from 'redux-persist/lib/storage'; // Default is localStorage for web
 
-interface ComponentsState {
+interface ComponentsStateType {
   data: ComponentDataType[];
   componentsHistoryState: {
     currentIndex: number;
@@ -16,7 +18,7 @@ interface ComponentsState {
   };
 }
 
-const initialState: ComponentsState = {
+const initialState: ComponentsStateType = {
   data: [],
   editableComponentKeysData: {
     editableGrandParentComponentKey: "",
@@ -28,7 +30,7 @@ const initialState: ComponentsState = {
   },
 };
 
-const getUpdatedState = (state: ComponentsState) => {
+const getUpdatedState = (state: ComponentsStateType) => {
   const { currentIndex, componentsHistory } = state.componentsHistoryState;
   const newHistory = componentsHistory.slice(0, currentIndex + 1);
   newHistory.push(state.data);
@@ -251,4 +253,30 @@ export const {
   updateComponentEditableFields,
   setComponentsHistoryStateCurrentIndex,
 } = componentsSlice.actions;
-export default componentsSlice.reducer;
+
+
+
+
+// Configure persist for components slice
+const componentsTransform = createTransform(
+  (inboundState: any) => ({
+    data: inboundState.data,
+    editableComponentKeysData: inboundState.editableComponentKeysData,
+  }),
+  (outboundState:any) => ({
+    ...outboundState,
+    componentsHistoryState: {
+      currentIndex: outboundState.componentsHistoryState?.currentIndex ?? 0,
+      componentsHistory: outboundState.componentsHistoryState?.componentsHistory ?? [outboundState.data],
+    },
+  }),
+  { whitelist: ['components'] }
+);
+
+const componentsPersistConfig = {
+  key: 'components',
+  storage,
+  transforms: [componentsTransform],
+};
+
+export default persistReducer(componentsPersistConfig, componentsSlice.reducer);

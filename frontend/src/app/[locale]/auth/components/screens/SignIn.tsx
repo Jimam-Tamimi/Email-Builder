@@ -7,12 +7,16 @@ import { Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"; // Using icons from react-icons
 import { useState } from "react";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from '@/i18n/routing';
 import useSignIn from "@/hooks/auth/useSignIn";
 import { SignInFormDataType } from "@/types/auth";
 
 export default function SignIn({ pageContent }: { pageContent: any }) {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
+
+
+  
+  
   const {
     register,
     handleSubmit,
@@ -21,13 +25,13 @@ export default function SignIn({ pageContent }: { pageContent: any }) {
   } = useForm<SignInFormDataType>();
 
 
+  
+  
   // handle sending data to the server for authentication 
   const signInMutation = useSignIn();
   const onSubmit = (data: SignInFormDataType) => {
     // Handle form submission
     console.log(data);
-    toast.success("Dummy Sign In Success!")
-    return; // must remove return after setting up apis.
     signInMutation.mutateAsync(data, {
       onSuccess: async (data) => {
         reset();
@@ -72,7 +76,7 @@ export default function SignIn({ pageContent }: { pageContent: any }) {
             {...register("password", {
             required: "This field is required",
             minLength: {
-              value: 8,
+              value: 1,
               message: "Password must be at least 8 characters long",
             },
             })}
