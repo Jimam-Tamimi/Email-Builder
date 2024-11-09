@@ -53,7 +53,7 @@ const useSignIn = () => {
 
       toast.success("Sign In Successful!!");
       await createTemplate.mutateAsync({
-        title: "Untitled Template" + uuidv4().slice(0, 4),
+        title: "Untitled Template " + uuidv4().slice(0, 4),
         description: "",
         data: componentsData,
       });

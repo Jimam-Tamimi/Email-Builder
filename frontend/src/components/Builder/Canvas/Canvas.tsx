@@ -7,37 +7,45 @@
 
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Reorder, AnimatePresence } from "framer-motion";
-import DynamicComponent from "../DynamicComponent";
+import DynamicComponent from "../../DynamicComponent";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "@/redux/store";
 import { addComponent, setComponents } from "@/redux/slices/componentsSlice";
-import ThemeToggler from "../ThemeToggler";
-import SelectLanguage from "../SelectLanguage";
+import ThemeToggler from "../../ThemeToggler";
+import SelectLanguage from "../../SelectLanguage";
+import { useWebSocket } from "@/context/WebSocketContext";
+import useWebSocketHandler from "@/hooks/socket/useWebSocketHandler";
 
 /**
  * Canvas Component
- * 
+ *
  * @component
  * @param {Object} props - Component properties.
  * @param {any} props.pageContent - Content used for displaying messages or instructions in the component.
- * 
+ *
  * @returns {JSX.Element} The rendered Canvas component.
- * 
+ *
  * @description
  * The `Canvas` component provides a flexible area where users can drag-and-drop components from the sidebar,
  * rearrange them in a specific order, and adjust the layout dynamically.
  * This component is built using `framer-motion` for animations, allowing smooth reordering and transitions.
  * It also incorporates Redux for state management and interacts with other UI components such as ThemeToggler
  * and SelectLanguage.
- * 
+ *
  * The component follows these primary behaviors:
  * - Receives a component when dropped onto the canvas, and adds it to the Redux state.
  * - Supports drag-and-drop functionality to change the order of added components.
  * - Displays a placeholder message if no components are present.
  */
-export default function Canvas({ pageContent }: { pageContent: any }) {
+export default function Canvas({
+  pageContent,
+  id,
+}: {
+  pageContent: any;
+  id?: string;
+}) {
   const dispatch = useAppDispatch();
 
   // Retrieve the list of components from Redux state
@@ -45,6 +53,10 @@ export default function Canvas({ pageContent }: { pageContent: any }) {
 
   // Local state to track whether an item is being dragged
   const [isDragging, setIsDragging] = useState(false);
+
+  const { socket } = useWebSocket();
+
+  // useWebSocketHandler("deliver_message", handleDeliverMessage, false);
 
   /**
    * Handle the drop event when a component is dragged from the sidebar to the canvas.
@@ -58,8 +70,27 @@ export default function Canvas({ pageContent }: { pageContent: any }) {
     if (!componentData) return;
 
     // Parse the component data and dispatch an action to add it to the Redux store
-    const component = JSON.parse(componentData);
-    dispatch(addComponent(component));
+    let component = JSON.parse(componentData);
+
+    component.key = `${component.key}.${new Date()}`;
+    let newTemplateData = [...components, component]
+    dispatch(
+      setComponents({
+        data:newTemplateData,
+      })
+      
+    );
+    if (socket && components && auth?.access) {
+      socket.send(
+        JSON.stringify({
+          type: "update_template_data",
+          templateId: id,
+          templateData: newTemplateData,
+        })
+      );
+    } else {
+      localStorage.setItem("templateData", JSON.stringify(newTemplateData));
+    }
   };
 
   /**
@@ -71,9 +102,13 @@ export default function Canvas({ pageContent }: { pageContent: any }) {
     e.preventDefault();
   };
 
+  const auth = useSelector((state: RootState) => state.auth.data);
+
   return (
     <div
-      className={`w-[66vw] flex ${!components?.length && "justify-center"} relative py-5 items-center flex-col min-h-screen overflow-y-scroll`}
+      className={`w-[66vw] flex ${
+        !components?.length && "justify-center"
+      } relative py-5 items-center flex-col min-h-screen overflow-y-scroll`}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       style={{ cursor: isDragging ? "grabbing" : "default" }}
@@ -88,7 +123,9 @@ export default function Canvas({ pageContent }: { pageContent: any }) {
       <p
         style={{ textShadow: "0px 0px 20px white" }}
         className={`capitalize tracking-wider ease-in-out text-center ${
-          components?.length ? "opacity-0 scale-75" : "opacity-100 scale-100 duration-300 delay-300"
+          components?.length
+            ? "opacity-0 scale-75"
+            : "opacity-100 scale-100 duration-300 delay-300"
         }`}
       >
         {pageContent?.canvas_component_not_available}
@@ -99,9 +136,23 @@ export default function Canvas({ pageContent }: { pageContent: any }) {
         axis="y"
         values={components || []}
         onReorder={(newOrder) => {
-          dispatch(setComponents({
-            data: newOrder,
-          }));
+
+          if (socket && components && auth?.access) {
+            socket.send(
+              JSON.stringify({
+                type: "update_template_data",
+                templateId: id,
+                templateData: newOrder,
+              })
+            );
+          } else {
+            localStorage.setItem("templateData", JSON.stringify(newOrder));
+          }
+          dispatch(
+            setComponents({
+              data: newOrder,
+            })
+          );
         }}
         style={{ backgroundColor: "#e5edf3" }}
         className="flex flex-col items-center"
@@ -120,7 +171,10 @@ export default function Canvas({ pageContent }: { pageContent: any }) {
               onDragEnd={() => setIsDragging(false)}
             >
               {/* Render the dynamic component with edit capability */}
-              <DynamicComponent data={component} editableGrandParentComponentKey={component?.key || ''} />
+              <DynamicComponent
+                data={component}
+                editableGrandParentComponentKey={component?.key || ""}
+              />
             </Reorder.Item>
           ))}
         </AnimatePresence>

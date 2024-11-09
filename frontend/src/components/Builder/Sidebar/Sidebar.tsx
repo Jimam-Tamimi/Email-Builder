@@ -8,9 +8,9 @@
 "use client";
 
 import { LiaGripLinesSolid } from "react-icons/lia";
-import ProductComponent from "../email/ProductComponent";
+import ProductComponent from "../../email/ProductComponent";
 import { useState } from "react";
-import DynamicComponent from "../DynamicComponent";
+import DynamicComponent from "../../DynamicComponent";
 import { ComponentDataType } from "@/types/component";
 import Auth from "@/app/[locale]/auth/components/Auth";
 import ProtectedComponent from "@/hoc/auth/ProtectedComponent";

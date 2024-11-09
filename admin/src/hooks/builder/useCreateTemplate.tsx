@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch } from "@/redux/store";
 import api from "@/api/api";
 import NProgress from "nprogress";
@@ -37,8 +37,8 @@ export const useCreateTemplate = () => {
 
   return useMutation({
     mutationFn: createTemplate,
-    onSuccess: (newData) => {
-      queryClient.setQueryData(["templatesInfinite"], (oldData: TemplateType[]) => {
+    onSuccess: (newData:any) => {
+      queryClient.setQueryData(["templatesInfinite"], (oldData: any) => {
         const updatedData = {
           ...oldData,
           pages: [
@@ -53,7 +53,6 @@ export const useCreateTemplate = () => {
         console.log(oldData)
         
         return updatedData;
-        // return { ...oldData, pages: {0: results: [newData, ...oldData.results]} };
       });
     },
     onError: async () => {

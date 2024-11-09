@@ -11,6 +11,7 @@ import {
 import { Button } from "@nextui-org/button";
 import EditorHeader from "./EditorHeader";
 import { useForm } from 'react-hook-form';
+import { useWebSocket } from "@/context/WebSocketContext";
 
 /**
  * The `Editor` component provides an interface for editing components in the application.
@@ -35,7 +36,7 @@ import { useForm } from 'react-hook-form';
  * @param {Object} props.pageContent - Contains data related to the page, such as titles, button text, and messages.
  * @returns {JSX.Element} The rendered editor with form fields and buttons for component editing.
  */
-export default function Editor({ pageContent }: { pageContent: any }) {
+export default function Editor({ pageContent, id }: { pageContent: any, id?:string }) {
   const [editableComponent, setEditableComponent] = useState<ComponentDataType>();
 
   const { register, handleSubmit } = useForm();
@@ -116,12 +117,31 @@ export default function Editor({ pageContent }: { pageContent: any }) {
    * @param {any} data - The form data representing the updated fields of the component.
    * @returns {void}
    */
+
+
+  const  auth = useSelector((state: RootState) => state.auth.data);
+  const { socket } = useWebSocket();
+  
   const onSubmit = async (data: any) => {
     dispatch(
       updateComponentEditableFields({
         productKey: editableComponentKeysData?.editableGrandParentComponentKey,
         componentKey: editableComponentKeysData?.editableComponentKey,
         data,
+        callBack: (newTemplateData) => {
+          if (socket && components && auth?.access) {
+            socket.send(
+              JSON.stringify({
+                type: "update_template_data",
+                templateId: id,
+                templateData: newTemplateData,
+              })
+            );
+          } else {
+            localStorage.setItem("templateData", JSON.stringify(newTemplateData));
+          }
+      
+        }
       })
     );
   };

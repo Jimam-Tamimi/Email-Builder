@@ -1,10 +1,11 @@
+"use client"
 import { useSelector } from 'react-redux';
 import { AuthType, Role } from '@/types/auth';
 import { useRouter } from '@/i18n/routing';
 import { RootState } from '@/redux/store';
 
 interface ProtectedComponentProps {
-  allowedRoles: Role[]; // Array of roles allowed to access this component
+  allowedRoles?: Role[]; // Array of roles allowed to access this component
   children: React.ReactNode;
 }
 

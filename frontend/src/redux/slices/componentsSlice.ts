@@ -138,6 +138,7 @@ const componentsSlice = createSlice({
         productKey: string;
         componentKey: string;
         data: any;
+        callBack?: (data: ComponentDataType[]) => void;
       }>
     ) => {
       try {
@@ -201,7 +202,7 @@ const componentsSlice = createSlice({
           // Update the specified field
           updateEditableField(editedComponent, updatedKey, newValue);
         });
-
+        action.payload.callBack && action.payload.callBack(state.data);
         state.componentsHistoryState = getUpdatedState(state);
       } catch (e) {
       } finally {
@@ -256,27 +257,6 @@ export const {
 
 
 
+ 
 
-// Configure persist for components slice
-const componentsTransform = createTransform(
-  (inboundState: any) => ({
-    data: inboundState.data,
-    editableComponentKeysData: inboundState.editableComponentKeysData,
-  }),
-  (outboundState:any) => ({
-    ...outboundState,
-    componentsHistoryState: {
-      currentIndex: outboundState.componentsHistoryState?.currentIndex ?? 0,
-      componentsHistory: outboundState.componentsHistoryState?.componentsHistory ?? [outboundState.data],
-    },
-  }),
-  { whitelist: ['components'] }
-);
-
-const componentsPersistConfig = {
-  key: 'components',
-  storage,
-  transforms: [componentsTransform],
-};
-
-export default persistReducer(componentsPersistConfig, componentsSlice.reducer);
+export default componentsSlice.reducer;
